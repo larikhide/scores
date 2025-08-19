@@ -9,21 +9,17 @@ import (
 func PlayerServer(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
 
-	shouldReturn := getPlayerScore(player, w)
-	if shouldReturn {
-		return
-	}
+	score := getPlayerScore(player)
+	fmt.Fprintf(w, score)
 }
 
-func getPlayerScore(player string, w http.ResponseWriter) bool {
+func getPlayerScore(player string) string {
 	if player == "Pepper" {
-		fmt.Fprintf(w, "20")
-		return true
+		return "20"
 	}
 
 	if player == "Floyd" {
-		fmt.Fprintf(w, "10")
-		return true
+		return "10"
 	}
-	return false
+	return ""
 }
