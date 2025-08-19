@@ -10,7 +10,7 @@ func PlayerServer(w http.ResponseWriter, r *http.Request) {
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
 
 	score := getPlayerScore(player)
-	fmt.Fprintf(w, score)
+	fmt.Fprint(w, score)
 }
 
 func getPlayerScore(player string) string {
