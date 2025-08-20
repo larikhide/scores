@@ -11,7 +11,8 @@ type StubPlayerStore struct {
 }
 
 func (s *StubPlayerStore) GetPlayerScore(name string) int {
-	return s.store[name]
+	score := s.store[name]
+	return score
 }
 
 func TestGETPlayers(t *testing.T) {
