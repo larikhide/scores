@@ -5,19 +5,10 @@ import (
 	"net/http"
 )
 
-type inMemoryStore struct{}
-
-func (s *inMemoryStore) GetPlayerScore(name string) int {
-	return 123
-}
-
-func (s *inMemoryStore) RecordWin(name string) {
-	// TODO: https://quii.gitbook.io/learn-go-with-tests/build-an-application/http-server#write-the-test-first-5
-}
-
 func main() {
+	store := NewInMemoryStore()
 	server := &PlayerServer{
-		store: &inMemoryStore{},
+		store: store,
 	}
 	log.Fatal(http.ListenAndServe(":5000", server))
 }
