@@ -89,7 +89,7 @@ func TestStoreWins(t *testing.T) {
 		assertStatusCode(t, resp.Code, http.StatusAccepted)
 
 		if len(store.winCalls) != 1 {
-			t.Errorf("got %d calls to RecordWin want %d", len(store.winCalls), 1)
+			t.Fatalf("got %d calls to RecordWin want %d", len(store.winCalls), 1)
 		}
 
 		if store.winCalls[0] != player {
@@ -122,4 +122,20 @@ func assertStatusCode(t *testing.T, got, want int) {
 	if got != want {
 		t.Errorf("got: %d\nwant: %d", got, want)
 	}
+}
+
+func TestLeague(t *testing.T) {
+	store := &SpyPlayerStore{}
+	server := &PlayerServer{
+		store: store,
+	}
+
+	t.Run("returns 200 when get /league", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodGet, "/league", nil)
+		resp := httptest.NewRecorder()
+
+		server.ServeHTTP(resp, req)
+
+		assertStatusCode(t, resp.Code, http.StatusOK)
+	})
 }
