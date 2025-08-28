@@ -18,7 +18,7 @@ type PlayerServer struct {
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router := http.NewServeMux()
 
-	router.Handle("/leauge", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	router.Handle("/league", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -32,6 +32,8 @@ func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			p.showScore(w, player)
 		}
 	}))
+
+	router.ServeHTTP(w, r)
 }
 
 func (p *PlayerServer) showScore(w http.ResponseWriter, player string) {
