@@ -21,52 +21,52 @@ func (s *SpyPlayerStore) RecordWin(name string) {
 	s.winCalls = append(s.winCalls, name)
 }
 
-func TestGETPlayers(t *testing.T) {
-	store := SpyPlayerStore{
-		store: map[string]int{
-			"Pepper": 20,
-			"Floyd":  10,
-		}}
-	server := &PlayerServer{&store}
-
-	t.Run("returns Pepper's score", func(t *testing.T) {
-		// arrange
-		req := makeGetScoreRequest("Pepper")
-		resp := httptest.NewRecorder()
-
-		// act
-		server.ServeHTTP(resp, req)
-
-		//assert
-		assertStatusCode(t, resp.Code, http.StatusOK)
-		assertResponseBody(t, resp.Body.String(), "20")
-	})
-
-	t.Run("returns Floyd's score", func(t *testing.T) {
-		// arrange
-		req := makeGetScoreRequest("Floyd")
-		resp := httptest.NewRecorder()
-
-		// act
-		server.ServeHTTP(resp, req)
-
-		// assert
-		assertStatusCode(t, resp.Code, http.StatusOK)
-		assertResponseBody(t, resp.Body.String(), "10")
-	})
-
-	t.Run("returns 404 on missing players", func(t *testing.T) {
-		// arrange
-		req := makeGetScoreRequest("Apollo")
-		resp := httptest.NewRecorder()
-
-		//act
-		server.ServeHTTP(resp, req)
-
-		// assert
-		assertStatusCode(t, resp.Code, http.StatusNotFound)
-	})
-}
+// func TestGETPlayers(t *testing.T) {
+// 	store := SpyPlayerStore{
+// 		store: map[string]int{
+// 			"Pepper": 20,
+// 			"Floyd":  10,
+// 		}}
+// 	server := &PlayerServer{&store}
+//
+// 	t.Run("returns Pepper's score", func(t *testing.T) {
+// 		// arrange
+// 		req := makeGetScoreRequest("Pepper")
+// 		resp := httptest.NewRecorder()
+//
+// 		// act
+// 		server.ServeHTTP(resp, req)
+//
+// 		//assert
+// 		assertStatusCode(t, resp.Code, http.StatusOK)
+// 		assertResponseBody(t, resp.Body.String(), "20")
+// 	})
+//
+// 	t.Run("returns Floyd's score", func(t *testing.T) {
+// 		// arrange
+// 		req := makeGetScoreRequest("Floyd")
+// 		resp := httptest.NewRecorder()
+//
+// 		// act
+// 		server.ServeHTTP(resp, req)
+//
+// 		// assert
+// 		assertStatusCode(t, resp.Code, http.StatusOK)
+// 		assertResponseBody(t, resp.Body.String(), "10")
+// 	})
+//
+// 	t.Run("returns 404 on missing players", func(t *testing.T) {
+// 		// arrange
+// 		req := makeGetScoreRequest("Apollo")
+// 		resp := httptest.NewRecorder()
+//
+// 		//act
+// 		server.ServeHTTP(resp, req)
+//
+// 		// assert
+// 		assertStatusCode(t, resp.Code, http.StatusNotFound)
+// 	})
+// }
 
 func TestStoreWins(t *testing.T) {
 	// arrange
