@@ -27,7 +27,7 @@ func TestGETPlayers(t *testing.T) {
 			"Pepper": 20,
 			"Floyd":  10,
 		}}
-	server := &PlayerServer{&store}
+	server := NewPlayerServer(&store)
 
 	t.Run("returns Pepper's score", func(t *testing.T) {
 		// arrange
@@ -73,9 +73,7 @@ func TestStoreWins(t *testing.T) {
 	store := &SpyPlayerStore{
 		store: map[string]int{},
 	}
-	server := &PlayerServer{
-		store: store,
-	}
+	server := NewPlayerServer(store)
 
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		player := "Floyd"
@@ -126,9 +124,7 @@ func assertStatusCode(t *testing.T, got, want int) {
 
 func TestLeague(t *testing.T) {
 	store := &SpyPlayerStore{}
-	server := &PlayerServer{
-		store: store,
-	}
+	server := NewPlayerServer(store)
 
 	t.Run("returns 200 when get /league", func(t *testing.T) {
 		req, _ := http.NewRequest(http.MethodGet, "/league", nil)
