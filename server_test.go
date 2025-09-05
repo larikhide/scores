@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 )
 
 type SpyPlayerStore struct {
 	store    map[string]int
 	winCalls []string
+	league   []Player
 }
 
 func (s *SpyPlayerStore) GetPlayerScore(name string) int {
@@ -124,7 +126,14 @@ func assertStatusCode(t *testing.T, got, want int) {
 }
 
 func TestLeague(t *testing.T) {
-	store := &SpyPlayerStore{}
+	wantedLeague := []Player{
+		{"Chris", 20},
+		{"Bob", 30},
+		{"Bilbo", 90},
+	}
+	store := &SpyPlayerStore{
+		league: wantedLeague,
+	}
 	server := NewPlayerServer(store)
 
 	t.Run("returns 200 when get /league", func(t *testing.T) {
@@ -140,5 +149,9 @@ func TestLeague(t *testing.T) {
 			t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", resp.Body, err)
 		}
 		assertStatusCode(t, resp.Code, http.StatusOK)
+
+		if !reflect.DeepEqual(wantedLeague, got) {
+			t.Errorf("got: %v\nwant: %v\n", wantedLeague, got)
+		}
 	})
 }
