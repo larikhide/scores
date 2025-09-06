@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -13,6 +14,11 @@ type SpyPlayerStore struct {
 	store    map[string]int
 	winCalls []string
 	league   []Player
+}
+
+// GetLeague implements playerStore.
+func (s *SpyPlayerStore) GetLeague() []Player {
+	return s.league
 }
 
 func (s *SpyPlayerStore) GetPlayerScore(name string) int {
@@ -137,21 +143,46 @@ func TestLeague(t *testing.T) {
 	server := NewPlayerServer(store)
 
 	t.Run("returns 200 when get /league", func(t *testing.T) {
-		req, _ := http.NewRequest(http.MethodGet, "/league", nil)
+		req := makeLeagueRequest()
 		resp := httptest.NewRecorder()
 
 		server.ServeHTTP(resp, req)
 
-		var got []Player
-
-		err := json.NewDecoder(resp.Body).Decode(&got)
-		if err != nil {
-			t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", resp.Body, err)
-		}
+		got := getLeagueFromResponse(t, resp.Body)
 		assertStatusCode(t, resp.Code, http.StatusOK)
 
-		if !reflect.DeepEqual(wantedLeague, got) {
-			t.Errorf("got: %v\nwant: %v\n", wantedLeague, got)
-		}
+		assertLeague(t, wantedLeague, got)
+
+		assertContentType(t, resp, jsonContentType)
 	})
+}
+
+func assertContentType(t *testing.T, resp *httptest.ResponseRecorder, contentType string) {
+	t.Helper()
+	if resp.Result().Header.Get("content-type") != contentType {
+		t.Errorf("response did not have content-type of application/json, got %v", resp.Result().Header)
+	}
+}
+
+func assertLeague(t *testing.T, wantedLeague []Player, got []Player) {
+	if !reflect.DeepEqual(wantedLeague, got) {
+		t.Errorf("got: %v\nwant: %v\n", wantedLeague, got)
+	}
+}
+
+func getLeagueFromResponse(t *testing.T, body io.Reader) []Player {
+	t.Helper()
+
+	league := []Player{}
+	err := json.NewDecoder(body).Decode(&league)
+	if err != nil {
+		t.Fatalf("Unable to parse response from server %q into slice of Player, '%v'", body, err)
+	}
+
+	return league
+}
+
+func makeLeagueRequest() *http.Request {
+	req, _ := http.NewRequest(http.MethodGet, "/league", nil)
+	return req
 }

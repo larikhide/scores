@@ -4,6 +4,11 @@ type InMemoryStore struct {
 	store map[string]int
 }
 
+// GetLeague implements playerStore.
+func (i *InMemoryStore) GetLeague() []Player {
+	return nil
+}
+
 // GetPlayerScore implements playerStore.
 func (i *InMemoryStore) GetPlayerScore(name string) int {
 	return i.store[name]
