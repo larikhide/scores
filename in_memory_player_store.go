@@ -6,7 +6,13 @@ type InMemoryStore struct {
 
 // GetLeague implements playerStore.
 func (i *InMemoryStore) GetLeague() []Player {
-	return nil
+	var league []Player
+
+	for name, score := range i.store {
+		league = append(league, Player{name, score})
+	}
+
+	return league
 }
 
 // GetPlayerScore implements playerStore.

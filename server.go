@@ -22,7 +22,7 @@ type PlayerServer struct {
 
 type Player struct {
 	Name   string
-	Points int32
+	Points int
 }
 
 func NewPlayerServer(store playerStore) *PlayerServer {
