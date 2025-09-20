@@ -179,3 +179,11 @@ func makeLeagueRequest() *http.Request {
 	req, _ := http.NewRequest(http.MethodGet, "/league", nil)
 	return req
 }
+
+func assertScoreEquals(t *testing.T, got int, want int) {
+	t.Helper()
+
+	if got != want {
+		t.Errorf("want: %d\ngot: %d", want, got)
+	}
+}
