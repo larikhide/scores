@@ -5,7 +5,7 @@ type InMemoryStore struct {
 }
 
 // GetLeague implements playerStore.
-func (i *InMemoryStore) GetLeague() []Player {
+func (i *InMemoryStore) GetLeague() League {
 	var league []Player
 
 	for name, score := range i.store {

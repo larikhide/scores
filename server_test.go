@@ -16,7 +16,7 @@ type SpyPlayerStore struct {
 }
 
 // GetLeague implements playerStore.
-func (s *SpyPlayerStore) GetLeague() []Player {
+func (s *SpyPlayerStore) GetLeague() League {
 	return s.league
 }
 
